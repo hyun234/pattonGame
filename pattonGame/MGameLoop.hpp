@@ -15,7 +15,7 @@ namespace LJH_Engine
     private:
         Player player;
         Enemy enemy;
-        bool GameRunning = true;
+        bool GameRunning;
         glfwWindow glwindow;
         
     private:
@@ -29,7 +29,6 @@ namespace LJH_Engine
                 }
             }
         }
-    public:
         //키 입력
         void Input() {
             if (GetAsyncKeyState(VK_UP) & 0x8000 || GetAsyncKeyState(VK_UP) & 0x8001)
@@ -40,18 +39,20 @@ namespace LJH_Engine
             {
                 player.downPressed();
             }
-            else 
+            else
             {
                 player.zeroPressed();
             }
         }
+    public:
         void Run()
         {
+            GameRunning = true;
             glwindow.checkWindow();  //윈도우 조건 체크
             do
             {
                 Update();
-            } while (!glwindow.windowwhile()); //윈도우 체크
+            } while (!glwindow.windowwhile()); //윈도우 켜져있는지 확인여부
             glwindow.endWindow(); //윈도우 종료
 
         }
