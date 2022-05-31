@@ -146,6 +146,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Enemy.hpp" />
+    <ClInclude Include="glfwWinodw.hpp" />
     <ClInclude Include="MGameLoop.hpp" />
     <ClInclude Include="Player.hpp" />
   </ItemGroup>

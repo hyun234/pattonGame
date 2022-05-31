@@ -1,26 +1,14 @@
-#include <GLFW/glfw3.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <iostream>
-#include <string>
+#pragma once
 #include <Windows.h>
+
 #include "Player.hpp"
 #include "Enemy.hpp"
+#include "glfwWinodw.hpp"
 
 #pragma comment(lib,"OpenGL32")
 using namespace std;
 
-static void error_callback(int error, const char* description)
-{
-    fputs(description, stderr);
-}
-static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, GL_TRUE);
-}
-
-namespace Engine
+namespace LJH_Engine
 {
     class GameLoop
     {
@@ -28,18 +16,21 @@ namespace Engine
         Player player;
         Enemy enemy;
         bool GameRunning = true;
+        glfwWindow glwindow;
         
     private:
+        //다시 시작
         void reStart() {
             if (GetAsyncKeyState(VK_SHIFT) & 0x8000 || GetAsyncKeyState(VK_SHIFT) & 0x8001)
             {
                 GameRunning = true;
-                enemy.enemyX[0] = 1;
-                enemy.enemyX[1] = 1;
-                enemy.enemyX[2] = 1;
+                for (int i = 0; i < 3; i++) {
+                    enemy.enemyX[i] = 1;
+                }
             }
         }
     public:
+        //키 입력
         void Input() {
             if (GetAsyncKeyState(VK_UP) & 0x8000 || GetAsyncKeyState(VK_UP) & 0x8001)
             {
@@ -56,128 +47,108 @@ namespace Engine
         }
         void Run()
         {
-            Update();
+            glwindow.checkWindow();  //윈도우 조건 체크
+            do
+            {
+                Update();
+            } while (!glwindow.windowwhile()); //윈도우 체크
+            glwindow.endWindow(); //윈도우 종료
+
         }
     private:
         void Update() {
-           
-            GLFWwindow* window;
-            glfwSetErrorCallback(error_callback);
-            if (!glfwInit())
-            {
-                exit(EXIT_FAILURE);
-            }
-            window = glfwCreateWindow(1080, 640, "Simple example", NULL, NULL);
-            if (!window)
-            {
-                glfwTerminate();
-                exit(EXIT_FAILURE);
-            }
-            glfwMakeContextCurrent(window);
-            glfwSetKeyCallback(window, key_callback);
+            glClearColor(0, 0, 0, 0);
+            glClear(GL_COLOR_BUFFER_BIT);
+            //road width
+            glBegin(GL_QUADS);
 
-            do
+            glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+            glVertex3f(-1.0f, 0.22f, 0.0f);
+            glVertex3f(-1.0f, 0.38f, 0.0f);
+            glVertex3f(1.0f, 0.38f, 0.0f);
+            glVertex3f(1.0f, 0.22f, 0.0f);
+            glEnd();
+
+            glBegin(GL_QUADS);
+
+            glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+            glVertex3f(-1.0f, -0.08f, 0.0f);
+            glVertex3f(-1.0f, 0.08f, 0.0f);
+            glVertex3f(1.0f, 0.08f, 0.0f);
+            glVertex3f(1.0f, -0.08f, 0.0f);
+            glEnd();
+
+            glBegin(GL_QUADS);
+
+            glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+            glVertex3f(-1.0f, -0.22f, 0.0f);
+            glVertex3f(-1.0f, -0.38f, 0.0f);
+            glVertex3f(1.0f, -0.38f, 0.0f);
+            glVertex3f(1.0f, -0.22f, 0.0f);
+            glEnd();
+
+            glBegin(GL_QUADS);
+            glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+            glVertex3f(-0.08f, 0.3f, 0.0f);
+            glVertex3f(0.08f, 0.3f, 0.0f);
+            glVertex3f(0.08f, -0.3f, 0.0f);
+            glVertex3f(-0.08f, -0.3f, 0.0f);
+            glEnd();
+
+            ///player
+            glPointSize(30);
+            glBegin(GL_POINTS);
+            glColor3f(0.359375f, 0.99609375f, 0.81640625f);
+            glVertex2f(player.playerX, player.playerY);
+
+
+            //enemy
+            glPointSize(10);
+            glBegin(GL_POINTS);
+            glColor3f((float)(rand() % 100) / 100, (float)(rand() % 100) / 100, (float)(rand() % 100) / 100);
+            for (int i = 0; i < 3; i++) {
+                glVertex2f(enemy.enemyX[i], enemy.enemyY[i]);
+            }
+            glEnd();
+
+            //충돌
+            if (player.playerX == 0 && player.playerY == -0.3f)
             {
-                glClearColor(0, 0, 0, 0);
+                if (enemy.enemyX[0] < 0.035f && enemy.enemyX[0] > -0.035f)
+                {
+                    GameRunning = false;
+                }
+            }
+            if (player.playerX == 0 && player.playerY == 0)
+            {
+                if (enemy.enemyX[1] < 0.035f && enemy.enemyX[1] > -0.035f)
+                {
+                    GameRunning = false;
+                }
+            }
+            if (player.playerX == 0 && player.playerY == 0.3f)
+            {
+                if (enemy.enemyX[2] < 0.035f && enemy.enemyX[2] > -0.035f)
+                {
+                    GameRunning = false;
+                }
+            }
+
+            if (GameRunning == true)
+            {
+                Input();
+                enemy.enemyCome();
+            }
+            if (GameRunning == false)
+            {
+                cout << " 게임 종료";
+                glClearColor(1, 0, 0, 0);
                 glClear(GL_COLOR_BUFFER_BIT);
-                //road width
-                glBegin(GL_QUADS);
 
-                glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-                glVertex3f(-1.0f, 0.22f, 0.0f);
-                glVertex3f(-1.0f, 0.38f, 0.0f);
-                glVertex3f(1.0f, 0.38f, 0.0f);
-                glVertex3f(1.0f, 0.22f,0.0f);
                 glEnd();
-
-                glBegin(GL_QUADS);
-
-                glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-                glVertex3f(-1.0f, -0.08f, 0.0f);
-                glVertex3f(-1.0f, 0.08f, 0.0f);
-                glVertex3f(1.0f, 0.08f, 0.0f);
-                glVertex3f(1.0f, -0.08f, 0.0f);
-                glEnd();
-
-                glBegin(GL_QUADS);
-
-                glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-                glVertex3f(-1.0f, -0.22f, 0.0f);
-                glVertex3f(-1.0f, -0.38f, 0.0f);
-                glVertex3f(1.0f, -0.38f, 0.0f);
-                glVertex3f(1.0f, -0.22f, 0.0f);
-                glEnd();
-
-                glBegin(GL_QUADS);
-                glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-                glVertex3f(-0.08f, 0.3f, 0.0f);
-                glVertex3f(0.08f, 0.3f, 0.0f);
-                glVertex3f(0.08f, -0.3f, 0.0f);
-                glVertex3f(-0.08f, -0.3f, 0.0f);
-                glEnd();
-
-                ///player
-                glPointSize(30);
-                glBegin(GL_POINTS);
-                glColor3f(0.359375f, 0.99609375f, 0.81640625f);
-                glVertex2f(player.playerX, player.playerY);
-
-                
-                //enemy
-                glPointSize(10);
-                glBegin(GL_POINTS);
-                glColor3f((float)(rand() % 100) / 100, (float)(rand() % 100) / 100, (float)(rand() % 100) / 100);
-                for (int i = 0; i < 3; i++) {
-                    glVertex2f(enemy.enemyX[i], enemy.enemyY[i]);
-                }
-                glEnd();
-
-                //충돌
-                if (player.playerX == 0 && player.playerY == -0.3f)
-                {
-                    if (enemy.enemyX[0] < 0.03f && enemy.enemyX[0] > -0.03f)
-                    {
-                        GameRunning = false;
-                    }
-                }
-                if (player.playerX == 0 && player.playerY == 0)
-                {
-                    if (enemy.enemyX[1] < 0.03f && enemy.enemyX[1] > -0.03f)
-                    {
-                        GameRunning = false;
-                    }
-                }
-                if (player.playerX == 0 && player.playerY == 0.3f)
-                {
-                    if (enemy.enemyX[2] < 0.03f && enemy.enemyX[2] > -0.03f)
-                    {
-                        GameRunning = false;
-                    }
-                }
-            
-                if (GameRunning == true)
-                {
-                    Input();
-                    enemy.enemyCome();
-                }
-                if (GameRunning == false)
-                {
-                    cout << " 게임 종료";
-                    glClearColor(1, 0, 0, 0);
-                    glClear(GL_COLOR_BUFFER_BIT);
-
-                    glEnd();
-                    reStart();
-                }
-
-                glfwSwapBuffers(window);
-                glfwPollEvents();
-
-            } while (!glfwWindowShouldClose(window));
-
-            glfwDestroyWindow(window);
-            glfwTerminate();
-            exit(EXIT_SUCCESS);
+                reStart();
+            }
+            glwindow.checkWindowEvent(); //이벤트 확인      
         }
     };
 }

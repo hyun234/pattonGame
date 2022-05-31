@@ -2,6 +2,6 @@
 
 int main(void)          
 {
-    Engine::GameLoop gloop;
+    LJH_Engine::GameLoop gloop;
     gloop.Run();
 }
