@@ -44,6 +44,7 @@ namespace LJH_Engine
                 player.zeroPressed();
             }
         }
+
     public:
         void Run()
         {
@@ -153,3 +154,6 @@ namespace LJH_Engine
         }
     };
 }
+
+//glclear render() 
+//±×¸² update()
