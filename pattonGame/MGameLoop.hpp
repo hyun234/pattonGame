@@ -50,10 +50,13 @@ namespace LJH_Engine
         {
             GameRunning = true;
             glwindow.checkWindow();  //윈도우 조건 체크
-            do
-            {
+            while (!glwindow.windowwhile()) {
                 Update();
-            } while (!glwindow.windowwhile()); //윈도우 켜져있는지 확인여부
+            }
+            //do
+            //{
+            //    Update();
+            //} while (!glwindow.windowwhile()); //윈도우 켜져있는지 확인여부
             glwindow.endWindow(); //윈도우 종료
 
         }

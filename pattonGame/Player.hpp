@@ -1,4 +1,5 @@
-class Player {
+class Player 
+{
 //플레이어 x,y좌표설정
 public: 
 	float playerX;
@@ -9,6 +10,7 @@ public:
 	};
 	~Player() {};
 //키 이벤트 설정
+
 	void upPressed() {
 		playerY = 0.3f;
 	}
