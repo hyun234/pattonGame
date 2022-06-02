@@ -152,6 +152,7 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="gameover.bmp" />
+    <Image Include="start.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

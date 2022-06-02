@@ -87,7 +87,7 @@ public:
         exit(EXIT_SUCCESS);
     }
     //이미지 세팅
-    void bitMap(void)
+    void gameOverBitMap(void)
     {
         glClearColor(0.0, 0.0, 0.0, 0.0);
 
@@ -95,6 +95,29 @@ public:
         int imgSize;			
         BYTE* image = LoadBitmapFile(&originalHeader, &imgSize, "gameover.bmp"); 
         if (image == NULL) return;     
+
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+        glGenTextures(10, &texName);
+        glBindTexture(GL_TEXTURE_2D, texName);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,
+            GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+            GL_NEAREST);
+
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 512, 512, 0, GL_RED, GL_BYTE, image);
+    }
+    void startBitMap(void)
+    {
+        glClearColor(0.0, 0.0, 0.0, 0.0);
+
+        BITMAPHEADER originalHeader;
+        int imgSize;
+        BYTE* image = LoadBitmapFile(&originalHeader, &imgSize, "start.bmp");
+        if (image == NULL) return;
 
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 

@@ -17,6 +17,7 @@ namespace LJH_Engine
         Player player;
         Enemy enemy;
         bool GameRunning;
+        bool game;
         glfwWindow glwindow;
 
     private:
@@ -30,6 +31,25 @@ namespace LJH_Engine
                 }
             }
         }
+        void Start() 
+        {
+            glwindow.startBitMap();
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+            glEnable(GL_TEXTURE_2D);
+            glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+            glBindTexture(GL_TEXTURE_2D, texName);
+
+            glBegin(GL_QUADS);
+            glTexCoord2f(0.0, 0.0);  glVertex3f(-0.9f, -1.0f, 0.0f);
+            glTexCoord2f(0.0, 1.0);  glVertex3f(-0.9f, 1.0f, 0.0f);
+            glTexCoord2f(1.0, 1.0);  glVertex3f(0.9f, 1.0f, 0.0f);
+            glTexCoord2f(1.0, 0.0);  glVertex3f(0.9f, -1.0f, 0.0f);
+            glEnd();
+            glFlush();
+            glDisable(GL_TEXTURE_2D);
+            glwindow.checkWindowEvent(); //이벤트 확인    
+        }
         //키 입력
         void Input() {
             if (GetAsyncKeyState(VK_UP) & 0x8000 || GetAsyncKeyState(VK_UP) & 0x8001)
@@ -40,6 +60,10 @@ namespace LJH_Engine
             {
                 player.downPressed();
             }
+            else if (GetAsyncKeyState(VK_SPACE) & 0x8000 || GetAsyncKeyState(VK_SPACE) & 0x8001)
+            {
+                game = true;
+            }
             else
             {
                 player.zeroPressed();
@@ -49,14 +73,19 @@ namespace LJH_Engine
         void Run()
         {
             GameRunning = true;
+            game = false;
             glwindow.checkWindow();  //윈도우 조건 체크
-            while (!glwindow.windowwhile()) {
-                Update();
+            while (!glwindow.windowwhile()) {//윈도우 켜져있는지 확인여부'
+                Input();
+                if (game == true) 
+                {
+                    Update();
+                }
+                else
+                {
+                    Start();
+                }
             }
-            //do
-            //{
-            //    Update();
-            //} while (!glwindow.windowwhile()); //윈도우 켜져있는지 확인여부
             glwindow.endWindow(); //윈도우 종료
 
         }
@@ -66,7 +95,7 @@ namespace LJH_Engine
             {
                 Input();
                 enemy.enemyCome();
-                glClearColor(0, 0, 0, 0);
+                glClearColor(0.5f, 0.5f, 0.5, 0);
                 glClear(GL_COLOR_BUFFER_BIT);
                 //road width
                 glBegin(GL_QUADS);
@@ -146,8 +175,8 @@ namespace LJH_Engine
             if (GameRunning == false)
             {
 
-                cout << "게임 종료 \n\n Shift 누르면 다시 시작\n\n";
-                glwindow.bitMap();
+                glwindow.gameOverBitMap();
+                glClear(GL_COLOR_BUFFER_BIT);
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
                 
                 glEnable(GL_TEXTURE_2D);
@@ -160,12 +189,6 @@ namespace LJH_Engine
                 glTexCoord2f(1.0, 1.0);  glVertex3f(0.8f, 1.0f, 0.0f);
                 glTexCoord2f(1.0, 0.0);  glVertex3f(0.8f, -1.0f, 0.0f);
                 glEnd();
-                /*glBegin(GL_TRIANGLES);
-                glTexCoord2f(0.0, 0.0); glVertex3f(-1.0, -1.0, 0.0);
-                glTexCoord2f(1.0, 0.0); glVertex3f(1.0, -1.0, 0.0);
-                glTexCoord2f(0.5, 1.0); glVertex3f(0.0, 1.0, 0.0);
-
-                glEnd();*/
                 glFlush();
                 glDisable(GL_TEXTURE_2D);
                 reStart();
