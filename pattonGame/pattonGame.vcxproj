@@ -151,7 +151,7 @@
     <ClInclude Include="Player.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="lena_gray.bmp" />
+    <Image Include="gameover.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

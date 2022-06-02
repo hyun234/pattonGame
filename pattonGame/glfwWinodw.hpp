@@ -93,12 +93,12 @@ public:
 
         BITMAPHEADER originalHeader;	
         int imgSize;			
-        BYTE* image = LoadBitmapFile(&originalHeader, &imgSize, "lena_gray.bmp"); 
+        BYTE* image = LoadBitmapFile(&originalHeader, &imgSize, "gameover.bmp"); 
         if (image == NULL) return;     
 
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-        glGenTextures(1, &texName);
+        glGenTextures(10, &texName);
         glBindTexture(GL_TEXTURE_2D, texName);
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -108,7 +108,7 @@ public:
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
             GL_NEAREST);
 
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 512, 512, 0, GL_RED, GL_BYTE, image);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 512, 512, 0, GL_GREEN, GL_BYTE, image);
     }
 
 };
