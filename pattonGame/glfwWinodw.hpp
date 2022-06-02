@@ -41,14 +41,15 @@ class glfwWindow
     GLFWwindow* window;
 private:
     static void error_callback(int error, const char* description)
-    {
-        fputs(description, stderr);
-    }
-    static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-    {
-        if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-            glfwSetWindowShouldClose(window, GL_TRUE);
-    }
+{
+    fputs(description, stderr);
+}
+static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, GL_TRUE);
+}
+
    
 public:
     //윈도우 체크
@@ -86,7 +87,7 @@ public:
         glfwTerminate();
         exit(EXIT_SUCCESS);
     }
-    //이미지 세팅
+    //종료 이미지 세팅
     void gameOverBitMap(void)
     {
         glClearColor(0.0, 0.0, 0.0, 0.0);
@@ -110,6 +111,7 @@ public:
 
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 512, 512, 0, GL_RED, GL_BYTE, image);
     }
+    //스타트 이미지 세팅 
     void startBitMap(void)
     {
         glClearColor(0.0, 0.0, 0.0, 0.0);

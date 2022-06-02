@@ -93,7 +93,6 @@ namespace LJH_Engine
         void Update() {
             if (GameRunning == true)
             {
-                Input();
                 enemy.enemyCome();
                 glClearColor(0.5f, 0.5f, 0.5, 0);
                 glClear(GL_COLOR_BUFFER_BIT);
